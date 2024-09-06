@@ -20,7 +20,9 @@ async function fetchProducts(){
     try{
         const response = await fetch(fetchAPI);
         allProducts = await response.json();
-        filterProducts();
+
+        displayProducts(allProducts);
+
     } catch (error) {
         console.error("Error fetching products", error);
     }
@@ -88,7 +90,6 @@ function addToCart(product){
 
     if(doesExist){
         doesExist.quantity += 1;
-        alert("Added")
     } else {
         product.quantity = 1;
         cart.push(product)
@@ -168,11 +169,21 @@ function deleteItem(index){
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    fetchProducts();
-    displayProductDetails();
-    addToCart();    
+    if(document.getElementById("product-list")){
+        fetchProducts();
+
+    }
+
+    if (document.getElementById("product-details")){
+        displayProductDetails();
+    }   
+
+    if (document.getElementById("cart-items")){
+        displayCart();
+    }
+
 });
 
-displayCart();
+
 
 

@@ -158,6 +158,7 @@ nav li:first-child{
   max-width: 250px; 
   text-align: center;
   box-sizing: border-box; 
+  cursor: pointer;
 }
 
 .product img {
@@ -306,4 +307,5 @@ nav li:first-child{
   font-size: 1.2em;
   margin-top: 20px;
   transition: background-color 0.3s;
+  cursor: pointer;
 }
