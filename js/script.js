@@ -20,7 +20,6 @@ async function fetchProducts(){
     try{
         const response = await fetch(fetchAPI);
         allProducts = await response.json();
-
         displayProducts(allProducts);
 
     } catch (error) {
@@ -50,7 +49,7 @@ function displayProducts(products){
         //Save to localstorage and switch page
         productElement.addEventListener("click", () => {
             localStorage.setItem("selectedProduct", JSON.stringify(product));
-            window.location.href = "product/index.html";
+            window.location.href = "/product/index.html";
         });
 
         productList.appendChild(productElement);
@@ -74,7 +73,8 @@ function displayProductDetails(){
 
         // Add product to shopping cart
         document.getElementById("add-to-cart").addEventListener("click", () => {
-            addToCart(selectedProduct)
+            addToCart(selectedProduct);
+            updateCount();
         });
     }else{
         productDetails.innerHTML = "<p>No product details available.</p>";
@@ -135,7 +135,7 @@ function displayCart(){
 
         itemInstance.innerHTML = `
             <img src="${item.image}" alt="${item.title}" width="100">
-            <div>
+            <div id="cart-item">
                 <h2>${item.title}</h2>
                 <p>Price: ${item.price.toFixed(2)}€</p>
                 <p>Quantity: ${item.quantity}</p>
@@ -148,7 +148,7 @@ function displayCart(){
         priceTotal += item.price * item.quantity;
     });
 
-    cartTotal.innerHTML = `<h2>Total: ${priceTotal.toFixed(2)}€</h2>`;
+    cartTotal.innerHTML = `<h2 id="cart-total">Total: ${priceTotal.toFixed(2)}€</h2>`;
 
     //Delete button 
     document.querySelectorAll(".delete-button").forEach(button => {
@@ -166,22 +166,85 @@ function deleteItem(index){
 
     localStorage.setItem("cart", JSON.stringify(cart));
     displayCart();
+    updateCount();
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-    if(document.getElementById("product-list")){
-        fetchProducts();
+// Update cart in navigation
+function updateCount(){
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+    let totalItems = cart.reduce((total, item) => total + item.quantity, 0);
 
+    const cartCount = document.getElementById("count");
+    if(cartCount){
+        cartCount.textContent = `(${totalItems})`;
+    }
+}
+
+//Complete order
+
+document.addEventListener("DOMContentLoaded", () => {
+    const completeOrderButn = document.getElementById("complete-order");
+
+    if (completeOrderButn){
+        completeOrderButn.addEventListener("click", () => {
+            let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+            if(cart.length === 0) {
+                alert("Your cart is empty");
+                return;
+            }
+
+            localStorage.setItem("confirmedOrder", JSON.stringify(cart));
+            window.location.href = "/checkout/confirmation/index.html"
+        })
+    }
+});
+
+
+
+
+//Order confirmation
+
+function confirmationPage(){
+    const orderDetails = document.getElementById("order-details");
+    let confirmation = JSON.parse(localStorage.getItem("confirmedOrder"));
+
+    if (!confirmation || confirmation.length === 0){
+        orderDetails.innerHTML = "<p>No details available</p>"
+        return;
     }
 
-    if (document.getElementById("product-details")){
-        displayProductDetails();
-    }   
+    confirmation.forEach(item => {
+        const orderItem = document.createElement("div");
+        orderItem.classList.add("order-item");
+    
+        orderItem.innerHTML = `
+            <h2>${item.title}</h2>
+            <p>Quantity: ${item.quantity}</p>
+        <p>Total: ${(item.price * item.quantity).toFixed(2)}€</p>
+        `;
+        orderDetails.appendChild(orderItem);
+    });
+};
 
-    if (document.getElementById("cart-items")){
+document.addEventListener("DOMContentLoaded", () => {
+    if (document.getElementById("product-list")) {
+        fetchProducts();
+    }
+
+    if (document.getElementById("product-details")) {
+        displayProductDetails();
+    }
+
+    if (document.getElementById("cart-items")) {
         displayCart();
     }
 
+    if (document.getElementById("order-details")) {
+        confirmationPage();
+    }
+
+    updateCount();
 });
 
 

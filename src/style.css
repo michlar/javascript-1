@@ -274,27 +274,28 @@ nav li:first-child{
 
 .product-details img{
   width: 100%;
-  max-width: 400px;
+  max-width: 250px;
   height: auto;
   margin-bottom: 20px;
 }
 
 .product-details h1{
-  font-size: 2.5em;
+  font-size: 2em;
   margin-bottom: 10px;
   text-align: center;
 }
 
 .product-details .price{
-  font-size: 1.5em;
+  font-size: 1.2em;
   font-weight: bold;
   margin-bottom: 20px;
 }
 
 .product-details p{
   font-size: 1.2em;
-  line-height: 1.6;
+  line-height: 1.4;
   text-align: center;
+  max-width: 600px;
 }
 
 .product-details .button{
@@ -309,3 +310,124 @@ nav li:first-child{
   transition: background-color 0.3s;
   cursor: pointer;
 }
+
+/*** Shopping cart ***/
+
+#cart-container{
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+#cart-container h1{
+  text-align: center;
+  font-size: 2em;
+  margin-bottom: 20px;
+}
+
+.cart-items{
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-bottom: 40px;
+}
+
+.cart-item{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px;
+  border: 1px solid #ddd;
+  box-shadow: 1px 1px 8px;
+  background-color: #FFFFFF;
+}
+
+.cart-item img{
+  width: 120px;
+  height: auto;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.cart-item div{
+  flex-grow: 1;
+  padding-left: 20px;
+}
+
+.cart-item h2{
+  font-size: 1.3em;
+  margin: 0;
+}
+
+.cart-item p{
+  margin: 5px 0;
+}
+
+#cart-total {
+  font-size: 1.5rem;
+  text-align: right;
+  margin-top: 20px;
+}
+
+.delete-button{
+  background-color: var(--color-third);
+  border: none;
+  color: white;
+  padding: 10px 15px;
+  font-size: 1rem;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.delete-button:hover{
+  background-color: var(--color-shadow);
+}
+
+.complete-order{
+  display: block;
+  padding: 15px;
+  font-size: 1.2em;
+  text-align: center;
+  background-color: var(--color-shadow);
+  color: #FFFFFF;
+  text-transform: uppercase;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 20px;
+}
+
+.complete-order:hover{
+  background-color: var(--color-third);
+}
+
+@media (max-width: 768px){
+  .cart-item{
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .cart-item img{
+    width: 100%;
+    max-width: 200px;
+    margin-bottom: 10px;
+  }
+
+  #cart-total{
+    font-size: 1.2em;
+  }
+
+  .delete-button{
+    align-self: flex-end;
+    width: 100%;
+  }
+
+  .complete-order{
+    margin-top: 10px;
+    float: right;
+  }
+}
+
+
+
