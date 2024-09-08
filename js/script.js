@@ -17,7 +17,9 @@ let allProducts = [];
 
 // Fetch products from API
 async function fetchProducts(){
+    const loadingIndicator = document.getElementById("loading-indicator");
     try{
+        loadingIndicator.style.display = "block";
         const response = await fetch(fetchAPI);
         allProducts = await response.json();
         displayProducts(allProducts);
@@ -25,6 +27,8 @@ async function fetchProducts(){
     } catch (error) {
         console.error("Error fetching products", error);
         alert("There was an error loading the products. Please try again later.");
+    } finally{
+        loadingIndicator.style.display = "none";
     }
 }
 
