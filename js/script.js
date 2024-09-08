@@ -24,6 +24,7 @@ async function fetchProducts(){
 
     } catch (error) {
         console.error("Error fetching products", error);
+        alert("There was an error loading the products. Please try again later.");
     }
 }
 
@@ -75,9 +76,11 @@ function displayProductDetails(){
         document.getElementById("add-to-cart").addEventListener("click", () => {
             addToCart(selectedProduct);
             updateCount();
+
         });
     }else{
         productDetails.innerHTML = "<p>No product details available.</p>";
+        alert("No product details available. Please select a product.");
     }
 }
 
@@ -96,6 +99,18 @@ function addToCart(product){
     }
     // Save to local storage
     localStorage.setItem("cart", JSON.stringify(cart));
+
+    showFeedbackMessage("Product added to cart")
+}
+
+function showFeedbackMessage(message) {
+    const feedbackMessageDiv = document.getElementById("feedback-message");
+    feedbackMessageDiv.textContent = message;
+    feedbackMessageDiv.style.display = "block";
+
+    setTimeout(() => {
+        feedbackMessageDiv.style.display = "none";
+    }, 3000);
 }
 
 // Filter function
@@ -159,6 +174,7 @@ function displayCart(){
     });
 }
 
+
 // Delete from cart function 
 function deleteItem(index){
     let cart = JSON.parse(localStorage.getItem("cart")) || [];
@@ -174,14 +190,13 @@ function updateCount(){
     let cart = JSON.parse(localStorage.getItem("cart")) || [];
     let totalItems = cart.reduce((total, item) => total + item.quantity, 0);
 
-    const cartCount = document.getElementById("count");
-    if(cartCount){
-        cartCount.textContent = `(${totalItems})`;
-    }
+    const cartCount = document.querySelectorAll(".count");
+    cartCount.forEach(cartCount => {
+        cartCount.textContent = `(${totalItems})`
+    });
 }
 
 //Complete order
-
 document.addEventListener("DOMContentLoaded", () => {
     const completeOrderButn = document.getElementById("complete-order");
 
@@ -195,16 +210,15 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
             localStorage.setItem("confirmedOrder", JSON.stringify(cart));
+            localStorage.removeItem("cart");
+            updateCount();
+
             window.location.href = "/checkout/confirmation/index.html"
         })
     }
 });
 
-
-
-
 //Order confirmation
-
 function confirmationPage(){
     const orderDetails = document.getElementById("order-details");
     let confirmation = JSON.parse(localStorage.getItem("confirmedOrder"));
@@ -219,15 +233,19 @@ function confirmationPage(){
         orderItem.classList.add("order-item");
     
         orderItem.innerHTML = `
+            <img src="${item.image}"></img>
             <h2>${item.title}</h2>
             <p>Quantity: ${item.quantity}</p>
-        <p>Total: ${(item.price * item.quantity).toFixed(2)}€</p>
+            <p>Total: ${(item.price * item.quantity).toFixed(2)}€</p>
         `;
         orderDetails.appendChild(orderItem);
+
     });
 };
 
 document.addEventListener("DOMContentLoaded", () => {
+    updateCount();
+
     if (document.getElementById("product-list")) {
         fetchProducts();
     }
@@ -243,8 +261,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (document.getElementById("order-details")) {
         confirmationPage();
     }
-
-    updateCount();
+    
 });
 
 
